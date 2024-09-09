@@ -1,0 +1,4 @@
+pnpm run check-types
+lint-staged
+pnpm run test
+git add assets
