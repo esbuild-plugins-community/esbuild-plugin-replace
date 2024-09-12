@@ -14,6 +14,7 @@ export const pluginReplace = (options: TypeOptions): Plugin => {
     setup(build) {
       build.onLoad(
         {
+          // exclude node_modules in a golang-way
           filter:
             /^([^n]|n(n|o(n|d(n|e(n|_(n|m(n|o(n|d(n|u(n|l(n|en))))))))))*([^no]|o([^dn]|d([^en]|e([^_n]|_([^mn]|m([^no]|o([^dn]|d([^nu]|u([^ln]|l([^en]|e[^ns])))))))))))*(n(n|o(n|d(n|e(n|_(n|m(n|o(n|d(n|u(n|l(n|en))))))))))*(o(d?|de(_?|_m(o?|od(u?|ule?)))))?)?$/g,
         },
@@ -24,16 +25,13 @@ export const pluginReplace = (options: TypeOptions): Plugin => {
           options.forEach((option) => {
             if (!option.filter.test(args.path)) return;
 
-            if (!newContents) {
-              newContents = fs.readFileSync(args.path, 'utf-8');
-            }
-
-            newContents = newContents.replace(option.replace, option.replacer(args) as any);
+            newContents = (newContents || fs.readFileSync(args.path, 'utf-8')).replace(
+              option.replace,
+              option.replacer(args) as any
+            );
           });
 
-          if (newContents) {
-            return { contents: newContents, loader: 'default' };
-          }
+          if (newContents) return { contents: newContents, loader: 'default' };
         }
       );
     },
