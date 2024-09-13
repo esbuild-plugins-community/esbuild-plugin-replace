@@ -222,4 +222,48 @@ export {
 `
     );
   });
+
+  await it('All modifiers', async () => {
+    const fileName = 'modifierAll';
+
+    await build({
+      ...getConfig(),
+      entryPoints: [path.resolve(pathRes, `${fileName}.tsx`)],
+      plugins: [
+        pluginReplace([
+          modifierDirname({ filter: /\.tsx?$/ }),
+          modifierFilename({ filter: /\.tsx?$/ }),
+          modifierLodash({ filter: /\.tsx?$/ }),
+          modifierMobxObserverFC({ filter: /\.tsx?$/ }),
+        ]),
+      ],
+      packages: 'external',
+    });
+
+    const content = fs.readFileSync(path.resolve(pathTemp, `${fileName}.js`), 'utf8');
+
+    assert.equal(
+      content,
+      `// test/res/modifierAll.tsx
+import { observer } from "mobx-react-lite";
+var Component = observer(function Component2() {
+  return null;
+});
+var ComponentExport = observer(function ComponentExport2() {
+  return null;
+});
+var test = "test/res";
+var test2 = "test/res";
+var test3 = "test/res/modifierAll.tsx";
+var test4 = "test/res/modifierAll.tsx";
+export {
+  ComponentExport,
+  test,
+  test2,
+  test3,
+  test4
+};
+`
+    );
+  });
 });
