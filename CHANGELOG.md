@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/compare/v1.0.0...v1.0.1) (2024-09-13)
+
+
+### Bug Fixes
+
+* add tests for all modifiers ([b21c7f7](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/commit/b21c7f7c75c338188b2e2aa8edd322cacdad64b7))
+
 ## 1.0.0 (2024-09-12)
 
 
