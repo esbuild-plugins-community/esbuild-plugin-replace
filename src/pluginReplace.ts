@@ -18,20 +18,21 @@ export const pluginReplace = (options: TypeOptions): Plugin => {
           filter:
             /^([^n]|n(n|o(n|d(n|e(n|_(n|m(n|o(n|d(n|u(n|l(n|en))))))))))*([^no]|o([^dn]|d([^en]|e([^_n]|_([^mn]|m([^no]|o([^dn]|d([^nu]|u([^ln]|l([^en]|e[^ns])))))))))))*(n(n|o(n|d(n|e(n|_(n|m(n|o(n|d(n|u(n|l(n|en))))))))))*(o(d?|de(_?|_m(o?|od(u?|ule?)))))?)?$/g,
         },
-        // eslint-disable-next-line consistent-return
         async (args) => {
-          let newContents = '';
+          const matchingModifiers = options.filter((option) => option.filter.test(args.path));
 
-          options.forEach((option) => {
-            if (!option.filter.test(args.path)) return;
+          if (!matchingModifiers.length) return;
 
-            newContents = (newContents || fs.readFileSync(args.path, 'utf-8')).replace(
-              option.replace,
-              option.replacer(args) as any
-            );
-          });
-
-          if (newContents) return { contents: newContents, loader: 'default' };
+          // eslint-disable-next-line consistent-return
+          return {
+            contents: matchingModifiers.reduce(
+              (contents, modifier) => {
+                return contents.replace(modifier.replace, modifier.replacer(args) as any);
+              },
+              fs.readFileSync(args.path, 'utf-8')
+            ),
+            loader: 'default',
+          };
         }
       );
     },
