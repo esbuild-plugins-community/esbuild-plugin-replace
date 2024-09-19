@@ -17,6 +17,10 @@ void describe('Plugin test', async () => {
   const pathRes = path.resolve('test/res');
   const pathTemp = path.resolve('test/tmp');
 
+  if (!fs.existsSync(pathTemp)) {
+    fs.mkdirSync(pathTemp);
+  }
+
   const getConfig = (): BuildOptions => ({
     bundle: true,
     format: 'esm',

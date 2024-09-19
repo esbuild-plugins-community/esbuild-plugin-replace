@@ -9,6 +9,12 @@
     "type": "git",
     "url": "git+https://github.com/esbuild-plugins-community/esbuild-plugin-replace.git"
   },
+  "keywords": [
+    "esbuild",
+    "esbuild-plugin",
+    "plugin",
+    "replace"
+  ],
   "scripts": {
     "prepare": "husky",
     "prepublishOnly": "pnpm run analyze:js&&pnpm run check-types&&pnpm run test",
@@ -17,8 +23,8 @@
     "check-types": "tsc --noEmit",
     "build": "rm -rf ./dist&&tsc -b ./tsconfig.cjs.json ./tsconfig.esm.json ./tsconfig.types.json&&node --import tsx ./scripts/genPackageFiles.ts&&pnpm run gen-size-badge",
     "build-watch": "rm -rf ./dist&&tsc -b ./tsconfig.cjs.json ./tsconfig.esm.json ./tsconfig.types.json --watch&&node --import tsx ./scripts/genPackageFiles.ts",
-    "test": "pnpm run build&&node --test ./test/import*.*js&&c8 node --import tsx --test ./test/*.test.*&&pnpm run gen-coverage-badge",
-    "test-watch": "pnpm run build&&node --import tsx --test --watch ./test/*.test.*",
+    "test": "pnpm run build&&node --test --test-reporter=spec ./test/import*.*js&&c8 node --import tsx --test --test-reporter=spec ./test/*.test.*&&pnpm run gen-coverage-badge",
+    "test-watch": "pnpm run build&&node --import tsx --test --test-reporter=spec --watch ./test/*.test.*",
     "gen-coverage-badge": "node --import tsx ./scripts/genCoverageBadge.ts",
     "gen-size-badge": "node --import tsx ./scripts/genSizeBadges.ts"
   },
