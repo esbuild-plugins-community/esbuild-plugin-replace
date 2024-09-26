@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import * as assert from 'node:assert/strict';
 import { afterEach, describe, it } from 'node:test';
 
-import { build, BuildOptions } from 'esbuild';
+import { build, BuildOptions, OnLoadArgs } from 'esbuild';
 
 import {
   pluginReplace,
@@ -36,6 +36,51 @@ void describe('Plugin test', async () => {
     fs.readdirSync(pathTemp).forEach((file) => {
       fs.unlinkSync(path.resolve(pathTemp, file));
     });
+  });
+
+  await it('arguments are passed to replacer function', async () => {
+    const fileName = 'modifierFilename';
+
+    let replacerArg1: OnLoadArgs;
+    let replacerArg2 = '';
+
+    await build({
+      ...getConfig(),
+      entryPoints: [path.resolve(pathRes, `${fileName}.ts`)],
+      plugins: [
+        pluginReplace([
+          {
+            filter: /\.ts$/,
+            replace: /__filename/g,
+            replacer(onLoadArgs, fileContent) {
+              replacerArg1 = onLoadArgs;
+              replacerArg2 = fileContent;
+
+              return () => {
+                return `"${path.relative(process.cwd(), onLoadArgs.path).replaceAll(path.sep, path.posix.sep)}"`;
+              };
+            },
+          },
+        ]),
+      ],
+    });
+
+    assert.equal(replacerArg1!.path.endsWith('modifierFilename.ts'), true);
+    assert.equal(replacerArg1!.namespace, 'file');
+    assert.equal(
+      replacerArg2,
+      `import { v4 } from '@lukeed/uuid';
+
+// @ts-ignore
+import { helper } from './modifierFilenameHelper.js';
+
+export const test = __filename;
+export const test2 = __filename;
+export const test3 = helper;
+
+export { v4 };
+`
+    );
   });
 
   await it('modifierFilename', async () => {

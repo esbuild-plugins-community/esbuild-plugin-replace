@@ -61,7 +61,7 @@ esbuild.build({
       {
         filter: /\.js$/,    // Only apply to specific files
         replace: 'someString' || /some-regexp/g,
-        replacer: (onLoadArgs: OnLoadArgs) => {
+        replacer: (onLoadArgs: OnLoadArgs, fileContent: string) => {
           return 'otherString' || (match, group) => ''
         },
       }
@@ -76,7 +76,7 @@ The plugin accepts an array of options, where each option contains:
 
 - `filter` (RegExp): A regular expression to match file paths that should be processed.
 - `replace` (string | RegExp): A string or regular expression to search for within the matched files.
-- `replacer` (function): A function that takes `onLoadArgs` and returns the replacement 
+- `replacer` (function): A function that takes `onLoadArgs` and `fileContent` and returns the replacement 
 string or a function for advanced replacements.
 
 ### Example Modifier
@@ -87,7 +87,7 @@ Here's an example of a custom modifier to replace `__dirname` in files:
 {
   filter: /src\/.*\.js$/,    // Match all .js files in the src directory
   replace: /__dirname/g,      // Replace all occurrences of __dirname
-  replacer: (args) => `"${path.relative(process.cwd(), path.dirname(args.path))}"`,
+  replacer: (onLoadArgs) => `"${path.relative(process.cwd(), path.dirname(onLoadArgs.path))}"`,
 }
 ```
 
