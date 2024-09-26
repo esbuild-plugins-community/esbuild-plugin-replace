@@ -6,7 +6,8 @@ export type TypeModifier = {
   filter: RegExp;
   replace: string | RegExp;
   replacer: (
-    onLoadArgs: OnLoadArgs
+    onLoadArgs: OnLoadArgs,
+    fileContent: string
   ) => string | ((substring: string, ...args: Array<any>) => string);
 };
 

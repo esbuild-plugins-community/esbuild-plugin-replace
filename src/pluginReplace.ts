@@ -23,14 +23,16 @@ export const pluginReplace = (options: TypeOptions): Plugin => {
 
           if (!matchingModifiers.length) return;
 
+          const fileContent = fs.readFileSync(args.path, 'utf-8');
+
           // eslint-disable-next-line consistent-return
           return {
-            contents: matchingModifiers.reduce(
-              (contents, modifier) => {
-                return contents.replace(modifier.replace, modifier.replacer(args) as any);
-              },
-              fs.readFileSync(args.path, 'utf-8')
-            ),
+            contents: matchingModifiers.reduce((contents, modifier) => {
+              return contents.replace(
+                modifier.replace,
+                modifier.replacer(args, fileContent) as any
+              );
+            }, fileContent),
             loader: 'default',
           };
         }
