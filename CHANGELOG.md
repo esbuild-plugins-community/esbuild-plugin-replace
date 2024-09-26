@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/compare/v1.0.1...v1.1.0) (2024-09-26)
+
+
+### Features
+
+* add file content to replacer function ([e9ef722](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/commit/e9ef722c6e26b91637643c5052e19bbed3d3a558))
+
 ## [1.0.1](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/compare/v1.0.0...v1.0.1) (2024-09-13)
 
 
