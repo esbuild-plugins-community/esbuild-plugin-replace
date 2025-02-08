@@ -43,10 +43,10 @@
     "mobx-react-lite": "4.0.7"
   },
   "peerDependencies": {
-    "esbuild": "^0.23.0"
+    "esbuild": ">=0.23"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18"
   },
   "exports": {
     "types": "./dist/types/index.d.ts",
