@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/compare/v1.1.0...v1.2.0) (2025-04-18)
+
+
+### Features
+
+* add async replacement ([f7316ff](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/commit/f7316ff838c98125e6c1ccedf61050f4c98f895d))
+
 ## [1.1.0](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/compare/v1.0.1...v1.1.0) (2024-09-26)
 
 
