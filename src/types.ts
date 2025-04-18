@@ -8,7 +8,7 @@ export type TypeModifier = {
   replacer: (
     onLoadArgs: OnLoadArgs,
     fileContent: string
-  ) => string | ((substring: string, ...args: Array<any>) => string);
+  ) => string | ((substring: string, ...args: Array<any>) => string | Promise<string>);
 };
 
 export type TypeModifierGetter = (options: { filter: TypeModifier['filter'] }) => TypeModifier;
