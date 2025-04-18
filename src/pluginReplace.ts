@@ -3,8 +3,30 @@ import * as fs from 'node:fs';
 import { Plugin } from 'esbuild';
 
 import { pluginName } from './constants.js';
-import { TypeOptions } from './types.js';
+import { TypeModifier, TypeOptions } from './types.js';
 import { validateOptions } from './validators/validateOptions.js';
+
+function replaceAsync(
+  str: string,
+  replace: string | RegExp,
+  replacer: ReturnType<TypeModifier['replacer']>
+) {
+  const promises: Array<Promise<any>> = [];
+
+  str.replace(replace, (match, ...args) => {
+    if (typeof replacer === 'string') {
+      promises.push(Promise.resolve(replacer));
+
+      return match;
+    }
+
+    promises.push(Promise.resolve().then(() => replacer(match, ...args)));
+
+    return match;
+  });
+
+  return Promise.all(promises).then((data) => str.replace(replace, () => data.shift()));
+}
 
 export const pluginReplace = (options: TypeOptions): Plugin => {
   validateOptions(options);
@@ -25,14 +47,22 @@ export const pluginReplace = (options: TypeOptions): Plugin => {
 
           const fileContent = fs.readFileSync(args.path, 'utf-8');
 
+          let replacedContent = fileContent;
+
+          while (matchingModifiers.length) {
+            const modifier = matchingModifiers.shift()!;
+
+            // eslint-disable-next-line no-await-in-loop
+            replacedContent = await replaceAsync(
+              replacedContent,
+              modifier.replace,
+              modifier.replacer(args, fileContent)
+            );
+          }
+
           // eslint-disable-next-line consistent-return
           return {
-            contents: matchingModifiers.reduce((contents, modifier) => {
-              return contents.replace(
-                modifier.replace,
-                modifier.replacer(args, fileContent) as any
-              );
-            }, fileContent),
+            contents: replacedContent,
             loader: 'default',
           };
         }

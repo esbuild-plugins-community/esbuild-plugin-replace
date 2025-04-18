@@ -83,6 +83,75 @@ export { v4 };
     );
   });
 
+  await it('modifier async', async () => {
+    const fileName = 'modifierFilename';
+
+    await build({
+      ...getConfig(),
+      entryPoints: [path.resolve(pathRes, `${fileName}.ts`)],
+      plugins: [
+        pluginReplace([
+          {
+            filter: /\.ts$/,
+            replace: /__filename/g,
+            replacer(onLoadArgs) {
+              return () => {
+                // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+                return new Promise((resolve) => setTimeout(resolve, 10)).then(
+                  () =>
+                    `"${path.relative(process.cwd(), onLoadArgs.path).replaceAll(path.sep, path.posix.sep)}"`
+                );
+              };
+            },
+          },
+        ]),
+      ],
+    });
+
+    const content = fs.readFileSync(path.resolve(pathTemp, `${fileName}.js`), 'utf8');
+
+    assert.equal(
+      content,
+      `// node_modules/.pnpm/@lukeed+uuid@2.0.1/node_modules/@lukeed/uuid/dist/index.mjs
+var IDX = 256;
+var HEX = [];
+var BUFFER;
+while (IDX--) HEX[IDX] = (IDX + 256).toString(16).substring(1);
+function v4() {
+  var i = 0, num, out = "";
+  if (!BUFFER || IDX + 16 > 256) {
+    BUFFER = Array(i = 256);
+    while (i--) BUFFER[i] = 256 * Math.random() | 0;
+    i = IDX = 0;
+  }
+  for (; i < 16; i++) {
+    num = BUFFER[IDX + i];
+    if (i == 6) out += HEX[num & 15 | 64];
+    else if (i == 8) out += HEX[num & 63 | 128];
+    else out += HEX[num];
+    if (i & 1 && i > 1 && i < 11) out += "-";
+  }
+  IDX++;
+  return out;
+}
+
+// test/res/modifierFilenameHelper.js
+var helper = __filename;
+
+// test/res/modifierFilename.ts
+var test = "test/res/modifierFilename.ts";
+var test2 = "test/res/modifierFilename.ts";
+var test3 = helper;
+export {
+  test,
+  test2,
+  test3,
+  v4
+};
+`
+    );
+  });
+
   await it('modifierFilename', async () => {
     const fileName = 'modifierFilename';
 
@@ -272,7 +341,7 @@ export {
     );
   });
 
-  await it('All modifiers', async () => {
+  await it('all modifiers', async () => {
     const fileName = 'modifierAll';
 
     await build({
@@ -301,6 +370,68 @@ var Component = observer(function Component2() {
 var ComponentExport = observer(function ComponentExport2() {
   return null;
 });
+var test = "test/res";
+var test2 = "test/res";
+var test3 = "test/res/modifierAll.tsx";
+var test4 = "test/res/modifierAll.tsx";
+export {
+  ComponentExport,
+  test,
+  test2,
+  test3,
+  test4
+};
+`
+    );
+  });
+
+  await it('multiple modifiers async', async () => {
+    const fileName = 'modifierAll';
+
+    await build({
+      ...getConfig(),
+      entryPoints: [path.resolve(pathRes, `${fileName}.tsx`)],
+      plugins: [
+        pluginReplace([
+          {
+            filter: /\.tsx?$/,
+            replace: /__filename/g,
+            replacer(onLoadArgs) {
+              return () => {
+                // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+                return new Promise((resolve) => setTimeout(resolve, 10)).then(
+                  () =>
+                    `"${path.relative(process.cwd(), onLoadArgs.path).replaceAll(path.sep, path.posix.sep)}"`
+                );
+              };
+            },
+          },
+          {
+            filter: /\.tsx?$/,
+            replace: /__dirname/g,
+            replacer(onLoadArgs) {
+              return () => {
+                // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+                return new Promise((resolve) => setTimeout(resolve, 10)).then(
+                  () =>
+                    `"${path.relative(process.cwd(), path.dirname(onLoadArgs.path)).replaceAll(path.sep, path.posix.sep)}"`
+                );
+              };
+            },
+          },
+        ]),
+      ],
+      packages: 'external',
+    });
+
+    const content = fs.readFileSync(path.resolve(pathTemp, `${fileName}.js`), 'utf8');
+
+    assert.equal(
+      content,
+      `// test/res/modifierAll.tsx
+function ComponentExport() {
+  return null;
+}
 var test = "test/res";
 var test2 = "test/res";
 var test3 = "test/res/modifierAll.tsx";

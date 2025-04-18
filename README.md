@@ -62,7 +62,7 @@ esbuild.build({
         filter: /\.js$/,    // Only apply to specific files
         replace: 'someString' || /some-regexp/g,
         replacer: (onLoadArgs: OnLoadArgs, fileContent: string) => {
-          return 'otherString' || (match, group) => ''
+          return 'otherString' || async (match, group) => ''
         },
       }
     ]),
@@ -77,7 +77,7 @@ The plugin accepts an array of options, where each option contains:
 - `filter` (RegExp): A regular expression to match file paths that should be processed.
 - `replace` (string | RegExp): A string or regular expression to search for within the matched files.
 - `replacer` (function): A function that takes `onLoadArgs` and `fileContent` and returns the replacement 
-string or a function for advanced replacements.
+string or a function for advanced replacements (this function can be asynchronous).
 
 ### Example Modifier
 
