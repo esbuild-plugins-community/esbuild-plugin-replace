@@ -34,39 +34,34 @@ export const pluginReplace = (options: TypeOptions): Plugin => {
   return {
     name: pluginName,
     setup(build) {
-      build.onLoad(
-        {
-          // exclude node_modules in a golang-way
-          filter:
-            /^([^n]|n(n|o(n|d(n|e(n|_(n|m(n|o(n|d(n|u(n|l(n|en))))))))))*([^no]|o([^dn]|d([^en]|e([^_n]|_([^mn]|m([^no]|o([^dn]|d([^nu]|u([^ln]|l([^en]|e[^ns])))))))))))*(n(n|o(n|d(n|e(n|_(n|m(n|o(n|d(n|u(n|l(n|en))))))))))*(o(d?|de(_?|_m(o?|od(u?|ule?)))))?)?$/g,
-        },
-        async (args) => {
-          const matchingModifiers = options.filter((option) => option.filter.test(args.path));
+      build.onLoad({ filter: /.*/ }, async (args) => {
+        if (args.path.includes('node_modules')) return;
 
-          if (!matchingModifiers.length) return;
+        const matchingModifiers = options.filter((option) => option.filter.test(args.path));
 
-          const fileContent = fs.readFileSync(args.path, 'utf-8');
+        if (!matchingModifiers.length) return;
 
-          let replacedContent = fileContent;
+        const fileContent = fs.readFileSync(args.path, 'utf-8');
 
-          while (matchingModifiers.length) {
-            const modifier = matchingModifiers.shift()!;
+        let replacedContent = fileContent;
 
-            // eslint-disable-next-line no-await-in-loop
-            replacedContent = await replaceAsync(
-              replacedContent,
-              modifier.replace,
-              modifier.replacer(args, fileContent)
-            );
-          }
+        while (matchingModifiers.length) {
+          const modifier = matchingModifiers.shift()!;
 
-          // eslint-disable-next-line consistent-return
-          return {
-            contents: replacedContent,
-            loader: 'default',
-          };
+          // eslint-disable-next-line no-await-in-loop
+          replacedContent = await replaceAsync(
+            replacedContent,
+            modifier.replace,
+            modifier.replacer(args, fileContent)
+          );
         }
-      );
+
+        // eslint-disable-next-line consistent-return
+        return {
+          contents: replacedContent,
+          loader: 'default',
+        };
+      });
     },
   };
 };
