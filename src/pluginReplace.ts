@@ -35,8 +35,6 @@ export const pluginReplace = (options: TypeOptions): Plugin => {
     name: pluginName,
     setup(build) {
       build.onLoad({ filter: /.*/ }, async (args) => {
-        if (args.path.includes('node_modules')) return;
-
         const matchingModifiers = options.filter((option) => option.filter.test(args.path));
 
         if (!matchingModifiers.length) return;
@@ -47,6 +45,10 @@ export const pluginReplace = (options: TypeOptions): Plugin => {
 
         while (matchingModifiers.length) {
           const modifier = matchingModifiers.shift()!;
+
+          if (!modifier.includeNodeModules && args.path.includes('node_modules')) {
+            continue;
+          }
 
           // eslint-disable-next-line no-await-in-loop
           replacedContent = await replaceAsync(

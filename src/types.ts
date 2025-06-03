@@ -5,6 +5,7 @@ export type TypeOptions = Array<TypeModifier>;
 export type TypeModifier = {
   filter: RegExp;
   replace: string | RegExp;
+  includeNodeModules?: boolean;
   replacer: (
     onLoadArgs: OnLoadArgs,
     fileContent: string

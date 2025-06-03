@@ -446,4 +446,69 @@ export {
 `
     );
   });
+
+  await it('modifierNodeModules', async () => {
+    const fileName = 'modifierFilename';
+
+    await build({
+      ...getConfig(),
+      entryPoints: [path.resolve(pathRes, `${fileName}.ts`)],
+      plugins: [
+        pluginReplace([
+          modifierFilename({ filter: /\.ts$/ }),
+          {
+            filter: /@lukeed/,
+            replace: '256',
+            includeNodeModules: true,
+            replacer: () => {
+              return '257';
+            },
+          },
+        ]),
+      ],
+    });
+
+    const content = fs.readFileSync(path.resolve(pathTemp, `${fileName}.js`), 'utf8');
+
+    assert.equal(
+      content,
+      `// node_modules/.pnpm/@lukeed+uuid@2.0.1/node_modules/@lukeed/uuid/dist/index.mjs
+var IDX = 257;
+var HEX = [];
+var BUFFER;
+while (IDX--) HEX[IDX] = (IDX + 256).toString(16).substring(1);
+function v4() {
+  var i = 0, num, out = "";
+  if (!BUFFER || IDX + 16 > 256) {
+    BUFFER = Array(i = 256);
+    while (i--) BUFFER[i] = 256 * Math.random() | 0;
+    i = IDX = 0;
+  }
+  for (; i < 16; i++) {
+    num = BUFFER[IDX + i];
+    if (i == 6) out += HEX[num & 15 | 64];
+    else if (i == 8) out += HEX[num & 63 | 128];
+    else out += HEX[num];
+    if (i & 1 && i > 1 && i < 11) out += "-";
+  }
+  IDX++;
+  return out;
+}
+
+// test/res/modifierFilenameHelper.js
+var helper = __filename;
+
+// test/res/modifierFilename.ts
+var test = "test/res/modifierFilename.ts";
+var test2 = "test/res/modifierFilename.ts";
+var test3 = helper;
+export {
+  test,
+  test2,
+  test3,
+  v4
+};
+`
+    );
+  });
 });
