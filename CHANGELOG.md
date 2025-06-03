@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/compare/v1.2.0...v1.3.0) (2025-06-03)
+
+
+### Features
+
+* add replacements in node_modules ([a6fc40f](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/commit/a6fc40f93537bde1f870a27debf27abffc8ec872))
+
 ## [1.2.0](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/compare/v1.1.0...v1.2.0) (2025-04-18)
 
 
