@@ -1,6 +1,9 @@
-import { TypeModifierGetter } from '../types.js';
+import { TypeModifier } from '../types.js';
 
-export const modifierMobxObserverFC: TypeModifierGetter = (options) => ({
+export const modifierMobxObserverFC = (options: {
+  filter: TypeModifier['filter'];
+  customImport?: string;
+}): TypeModifier => ({
   filter: options.filter,
   replace: /(export default |export )?function ([A-Z][a-zA-Z0-9]+)(.*?(?=;\n}\n));\n}\n/gs,
   replacer() {
@@ -15,7 +18,11 @@ export const modifierMobxObserverFC: TypeModifierGetter = (options) => ({
     ) => {
       const wrappedComponent = `observer(function ${functionName}${functionContent};\n})\n`;
 
-      let str = observerInjected ? '' : "\nimport { observer } from 'mobx-react-lite';\n";
+      let str = observerInjected
+        ? ''
+        : `
+${options.customImport || "import { observer } from 'mobx-react-lite';"}
+`;
 
       if (exportStatement) str += exportStatement;
 
