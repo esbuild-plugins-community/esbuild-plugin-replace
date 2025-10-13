@@ -279,19 +279,19 @@ function Helper() {
 
 // test/res/modifierMobxObserverFC.tsx
 import { observer } from "mobx-react-lite";
-var Component = observer(function Component2() {
+var Component = observer(function observed_Component() {
   return null;
 });
-var ComponentExport = observer(function ComponentExport2() {
+var ComponentExport = observer(function observed_ComponentExport() {
   return null;
 });
-var modifierMobxObserverFC_default = observer(function ComponentDefault() {
+var modifierMobxObserverFC_default = observer(function observed_ComponentDefault() {
   return null;
 });
-var ComponentProps = observer(function ComponentProps2(props) {
+var ComponentProps = observer(function observed_ComponentProps(props) {
   return null;
 });
-var ComponentTypes = observer(function ComponentTypes2(props) {
+var ComponentTypes = observer(function observed_ComponentTypes(props) {
   return null;
 });
 export {
@@ -364,10 +364,10 @@ export {
       content,
       `// test/res/modifierAll.tsx
 import { observer } from "mobx-react-lite";
-var Component = observer(function Component2() {
+var Component = observer(function observed_Component() {
   return null;
 });
-var ComponentExport = observer(function ComponentExport2() {
+var ComponentExport = observer(function observed_ComponentExport() {
   return null;
 });
 var test = "test/res";

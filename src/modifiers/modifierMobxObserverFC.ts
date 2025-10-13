@@ -16,7 +16,8 @@ export const modifierMobxObserverFC = (options: {
       functionContent: string
       // eslint-disable-next-line max-params
     ) => {
-      const wrappedComponent = `observer(function ${functionName}${functionContent};\n})\n`;
+      // To avoid names collision add observed_ suffix
+      const wrappedComponent = `observer(function observed_${functionName}${functionContent};\n})\n`;
 
       let str = observerInjected
         ? ''
