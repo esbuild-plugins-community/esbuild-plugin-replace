@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/compare/v1.3.0...v1.3.1) (2025-10-13)
+
+
+### Bug Fixes
+
+* avoid names collision in mobx observer modifier ([c8e761b](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/commit/c8e761b9c97cdaba9b3ae03588a7deaf3e3ce567))
+
 ## [1.3.0](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/compare/v1.2.0...v1.3.0) (2025-06-03)
 
 
