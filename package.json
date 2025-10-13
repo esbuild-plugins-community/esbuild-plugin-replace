@@ -12,8 +12,7 @@
   "keywords": [
     "esbuild",
     "esbuild-plugin",
-    "plugin",
-    "replace"
+    "plugin"
   ],
   "scripts": {
     "prepare": "husky",
