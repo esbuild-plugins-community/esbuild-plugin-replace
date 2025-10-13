@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/compare/v1.3.1...v1.3.2) (2025-10-13)
+
+
+### Bug Fixes
+
+* missing release ([8c1381c](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/commit/8c1381cacf296ad53e4c416dfa430c14c5087271))
+
 ## [1.3.1](https://github.com/esbuild-plugins-community/esbuild-plugin-replace/compare/v1.3.0...v1.3.1) (2025-10-13)
 
 
